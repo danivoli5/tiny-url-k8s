@@ -17,6 +17,7 @@ spec:
       containers:
         - name: tinyurl-app
           image: danivoli/tinyutl:2.0.0
+          imagePullPolicy: IfNotPresent  # Add this line to use local images when available
           ports:
             - containerPort: 8080
           env:
@@ -32,16 +33,16 @@ spec:
                   name: mongo-credentials
                   key: password
 
-            - name: REDIS_SENTINEL_MASTER
-              valueFrom:
-                configMapKeyRef:
-                  name: tinyurl-config
-                  key: REDIS_SENTINEL_MASTER
-            - name: REDIS_SENTINEL_NODES
-              valueFrom:
-                configMapKeyRef:
-                  name: tinyurl-config
-                  key: REDIS_SENTINEL_NODES
+#            - name: REDIS_SENTINEL_MASTER
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: tinyurl-config
+#                  key: REDIS_SENTINEL_MASTER
+#            - name: REDIS_SENTINEL_NODES
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: tinyurl-config
+#                  key: REDIS_SENTINEL_NODES
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -52,16 +53,16 @@ spec:
                 configMapKeyRef:
                   name: tinyurl-config
                   key: REDIS_PORT
-            - name: SPRING_REDIS_LETTUCE_FORCE_LEGACY_MODE
-              valueFrom:
-                configMapKeyRef:
-                  name: tinyurl-config
-                  key: SPRING_REDIS_LETTUCE_FORCE_LEGACY_MODE
-            - name: SPRING_REDIS_SENTINEL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-credentials
-                  key: redis-password
+#            - name: SPRING_REDIS_LETTUCE_FORCE_LEGACY_MODE
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: tinyurl-config
+#                  key: SPRING_REDIS_LETTUCE_FORCE_LEGACY_MODE
+#            - name: SPRING_REDIS_SENTINEL_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: redis-credentials
+#                  key: redis-password
 
 ---
 # Service to expose the TinyURL app
