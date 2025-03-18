@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: tinyurl-app
-          image: gcr.io/useful-art-450916-u3/tinyurl:latest
+          image: gcr.io/useful-art-450916-u3/tinyurl:2.0.0
           ports:
             - containerPort: 8080
           env:
