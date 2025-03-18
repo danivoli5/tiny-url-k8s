@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tinyurl-app
+  labels:
+    app: tinyurl-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tinyurl-app
+  template:
+    metadata:
+      labels:
+        app: tinyurl-app
+    spec:
+      containers:
+        - name: tinyurl-app
+          image: gcr.io/useful-art-450916-u3/tinyurl:latest
+          ports:
+            - containerPort: 8080
+          env:
+            # MongoDB Credentials
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-credentials
+                  key: username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-credentials
+                  key: password
+
+            - name: REDIS_SENTINEL_MASTER
+              valueFrom:
+                configMapKeyRef:
+                  name: tinyurl-config
+                  key: REDIS_SENTINEL_MASTER
+            - name: REDIS_SENTINEL_NODES
+              valueFrom:
+                configMapKeyRef:
+                  name: tinyurl-config
+                  key: REDIS_SENTINEL_NODES
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: tinyurl-config
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: tinyurl-config
+                  key: REDIS_PORT
+            - name: SPRING_REDIS_LETTUCE_FORCE_LEGACY_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: tinyurl-config
+                  key: SPRING_REDIS_LETTUCE_FORCE_LEGACY_MODE
+            - name: SPRING_REDIS_SENTINEL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: redis-password
+
+---
+# Service to expose the TinyURL app
+apiVersion: v1
+kind: Service
+metadata:
+  name: tinyurl-service
+  labels:
+    app: tinyurl-app
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: tinyurl-app
