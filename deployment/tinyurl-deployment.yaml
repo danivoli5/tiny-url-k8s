@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: tinyurl-app
-          image: danivoli/tinyutl:2.0.1
+          image: danivoli/tinyutl:2.0.0
           imagePullPolicy: IfNotPresent  # Add this line to use local images when available
           ports:
             - containerPort: 8080
